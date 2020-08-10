@@ -21,9 +21,7 @@ class HomeTab extends StatelessWidget {
         )
       ),
     );
-    
-  
-  
+
     return Stack(
       children: [
         _buildBodyBack(),

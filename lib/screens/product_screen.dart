@@ -1,7 +1,12 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual_cliente/data/cart_product.dart';
 import 'package:loja_virtual_cliente/data/product_data.dart';
+import 'package:loja_virtual_cliente/models/cart_model.dart';
+import 'package:loja_virtual_cliente/models/user_model.dart';
+import 'package:loja_virtual_cliente/screens/cart_screen.dart';
+import 'package:loja_virtual_cliente/screens/login_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   final ProductData product;
@@ -107,9 +112,27 @@ class _ProductScreenState extends State<ProductScreen> {
                   SizedBox(height: 16.0),
                   SizedBox(height: 44.0, child: RaisedButton(
                     color: _primaryColor,
-                    child: Text("Adicionar ao carrinho", style: TextStyle(fontSize: 18.0, color: Colors.white),),
+                    child: Text( UserModel.of(context).isLoggedIn() ? "Adicionar ao carrinho" : "Entre para comprar",
+                      style: TextStyle(fontSize: 18.0, color: Colors.white),),
                     onPressed: size != null ? () {
+                      if(UserModel.of(context).isLoggedIn()){
 
+                        CartProduct cartProduct = CartProduct();
+                        cartProduct.size = size;
+                        cartProduct.quantity = 1;
+                        cartProduct.pid = product.id;
+                        cartProduct.category = product.category;
+
+                        CartModel.of(context).addCartItem(cartProduct);
+
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => CartScreen())
+                        );
+                      } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => LoginScreen()),
+                        );
+                      }
                     } : null
                   ),),
                   SizedBox(height: 16.0),
